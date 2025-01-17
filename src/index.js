@@ -5,7 +5,23 @@ dotenv.config({
     path: "./env",
 });
 
-connectDB();
+connectDB()
+.then(() => {
+    app.on( "error",(err)=>{
+        console.log("db sey kiya error", err);
+        throw err;
+        app.listen(process.env.PORT || 8000 ,()=>{
+            console.log(`server is runing on this port${Process.env.PORT}`);
+            
+        })
+    })
+})
+.catch((error) => {
+    console.error("error connecting to db", error);
+    process.exit(1);
+});
+
+
 
 /*
 
