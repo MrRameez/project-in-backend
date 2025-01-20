@@ -1,8 +1,6 @@
 import { v2 as cloudinary } from "cloudinary";
 import fs from "fs";
 
-// Self-executing async function
-
 // Configuration
 cloudinary.config({
     cloud_name: process.env.CLOUD_NAME, // Ensure correct naming for environment variables
@@ -10,7 +8,7 @@ cloudinary.config({
     api_secret: process.env.API_SECRET,
 });
 
-// Function to upload file to Cloudinary
+// Function to upload a file to Cloudinary
 const uploadOnCloudinary = async (localFilePath) => {
     try {
         if (!localFilePath) {
@@ -35,7 +33,14 @@ const uploadOnCloudinary = async (localFilePath) => {
         }
 
         return null;
+    } finally {
+        // Always delete the local file, even if no errors occur
+        try {
+            fs.unlinkSync(localFilePath);
+        } catch (finalUnlinkError) {
+            console.error("Error during final cleanup of local file:", finalUnlinkError);
+        }
     }
 };
 
-export { cloudinary };
+export { cloudinary, uploadOnCloudinary };
